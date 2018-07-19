@@ -1,0 +1,8 @@
+id: navigart
+label: Navigart - import
+description: Import des oeuvres navigart.
+source_type: "API REST navigart"
+dependencies:
+  enforced:
+    module:
+      - mamc_navigart

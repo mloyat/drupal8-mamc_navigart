@@ -1,0 +1,11 @@
+name: MAMC import Navigart
+type: module
+description: Import des oeuvres de la collection du MAMC Saint-Etienne depuis l'API navigart.
+package: mamc
+core: 8.x
+version: 8.x-1.0
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - drupal:migrate_file

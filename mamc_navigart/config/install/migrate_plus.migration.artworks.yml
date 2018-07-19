@@ -1,0 +1,109 @@
+id: navigart_artworks
+label: Oeuvres de la collection du MAMC de Saint-Etienne.
+migration_group: navigart
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  # La pagination n'est pas encore prise en compte correctement, wait and see...
+  # https://drupal.stackexchange.com/questions/228801/using-migrate-api-with-a-multi-page-paginated-source
+  urls:
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=0&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=200&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=400&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=600&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=800&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=1000&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=1200&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=1400&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=1600&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=1800&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=2000&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=2200&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=2400&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=2600&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=2800&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=3000&size=200&sort=randomize:asc
+    - https://api.stg.navigart.fr/24/artworks?buster=1&from=3200&size=200&sort=randomize:asc
+  item_selector: results/
+  constants:
+    source_image_base_path: 'https://images.navigart.fr/1000/'
+    image_destination: 'public://upload/navigart/'
+  fields:
+  -
+    name: artwork_id
+    label: 'Identifiant navigart'
+    selector: _id
+  -
+    name: title
+    label: 'Titre'
+    selector: _source/ua/artwork/title_notice
+  -
+    name: author
+    label: 'Auteur'
+    selector: _source/ua/artwork/authors_notice
+  -
+    name: date_creation
+    label: 'Date de création'
+    selector: _source/ua/artwork/date_creation
+  -
+    name: technique
+    label: 'Technique'
+    selector: _source/ua/artwork/domain_description_mst
+  -
+    name: taille
+    label: 'Taille'
+    selector: _source/ua/artwork/dimensions
+  -
+    name: image_filename
+    label: 'Visuel'
+    selector: _source/ua/artwork/medias/0/file_name
+  -
+    name: image_copyright
+    label: 'Copyright de l''image'
+    selector: _source/ua/artwork/medias/0/copyright
+  -
+    name: credits_photo
+    label: 'Crédit photographique'
+    selector: _source/ua/artwork/medias/0/photographer
+
+  ids:
+    artwork_id:
+      type: string
+
+process:
+
+  # correspondance des champs sans transformation
+  name: title
+  field_text: author
+  field_text2: date_creation
+  field_text3: artwork_id
+  field_text4: taille
+  field_text5: image_copyright
+  field_text6: credits_photo
+  field_textarea_raw: technique
+
+  # Téléchargement de l'image
+  # On définit le chemin complet de destination de l'image.
+  source_full_path:
+    plugin: concat
+    source:
+      - 'constants/source_image_base_path'
+      - image_filename
+    delimiter: /
+  # On télécharge l'image en utilisant le module migrate_file
+  field_media_image:
+    plugin: image_import
+    source: '@source_full_path'
+    destination: 'constants/image_destination'
+    alt: title
+
+# On utilise une entité media de type image côté drupal.
+destination:
+  plugin: entity:media
+  default_bundle: navigart
+
+dependencies:
+  enforced:
+    module:
+    - mamc_navigart
