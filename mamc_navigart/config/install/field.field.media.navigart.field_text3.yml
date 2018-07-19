@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_text3
+    - media.type.navigart
+id: media.navigart.field_text3
+field_name: field_text3
+entity_type: media
+bundle: navigart
+label: navigart_id
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
