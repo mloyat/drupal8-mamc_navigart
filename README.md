@@ -1,5 +1,5 @@
 # drupal8-mamc_navigart
-Migration des œuvres de la connection du MAMC de Saint-Etienne depuis l'api navigart vers des entités media de drupal8.
+Migration des œuvres de la collection du MAMC de Saint-Etienne depuis l'api navigart vers des entités media de drupal8.
 
 Certains musées dont le Musée d'Art Moderne et Contemporain de Saint-Etienne utilisent le service Videomuseum pour la gestion de leur collection d'œuvres d'art. Ce service de gestion et de diffusion de collections met à disposition une API REST pour interroger la BDD. 
 
